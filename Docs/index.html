@@ -1,0 +1,102 @@
+<h1>TDViewer</h1>
+<p><code>com.square_enix.android_googleplay.PTD</code>の3Dモデルを読み込みUnity Editorに表示します。</p>
+<p>必要なもの：</p>
+<ul>
+<li>Unity 2019.4以上</li>
+<li>ゲームのデータ(<code>/sdcard/Android/data/com.square_enix.android_googleplay.PTD/files/prim</code>)</li>
+<li>Newtonsoft Json.NET(同梱 13.0.1 .NET Standard 2.0)</li>
+<li><a href="https://github.com/unity3d-jp/UnityChanToonShaderVer2_Project/releases/tag/legacy-2.0.8">UnityChanToonShader</a> (オプション)</li>
+</ul>
+<h2>プロジェクトの準備</h2>
+<p>Unityで新規プロジェクト 3D(コア)を作成。</p>
+<p>src以下のファイルを全て選択して、プロジェクトのAssetsにDrag&amp;Drop。</p>
+<p><img alt="" src="screenshots/assets.webp">
+<img alt="" src="screenshots/copy_files.png"></p>
+<p>UnityChanToonShaderを使う場合は、別途DLした<code>UTS2_ShaderOnly_v2.0.8_Release.unitypackage</code>もD&amp;D。</p>
+<h3>オリジナルのシェーダーを使う場合(Windowsのみ？)</h3>
+<p>「編集」→「プロジェクト設定」→「Player」→「PC,Mac &amp; Linux Standalone の設定」<br>
+「その他の設定  」
+「自動グラフィックス API for Windows」をアンチェック。<br>
+「Graphics APIs for Windows」の1番上に 「OpenGLES2」を設定する。  </p>
+<p>Unity Editorを再起動。<br>
+家の環境ではOpenGLES2に設定したら暗くなった。<br>
+その他の設定→色空間をガンマに設定。</p>
+<p>オリジナルのシェーダーを使った場合、シーンビューがIsoでは正常に表示されません。
+Perspを選んでください。</p>
+<h2>モデルの表示</h2>
+<p>左のヒエラルキーのSampleSceneで右クリックして、「Create Empty」で空のゲームオブジェクトを作ります。</p>
+<p>作ったゲームオブジェクト名を右クリックして「rename」を選び名前をSakuraにします(サクラ用)。</p>
+<p>Sakuraを選択した状態で、右側のインスペクターの
+Add Component(コンポーネントを追加)を押します。</p>
+<p>Script -&gt;  Char Script を選び、CharScriptコンポーネントを追加します。
+シェーダーを変えたい場合はシェーダーを変更しておきます。</p>
+<p><img alt="" src="screenshots/inspector.webp"></p>
+<p>▷再生ボタンを押します。
+<code>Assets/prim_dir.txt</code>が無ければ、ファイルダイアログが開きます。ゲームデータのあるディレクトリを指定してください。</p>
+<p>インスペクターのLoad Animボタンを押し、Playボタンを押すとアニメーションが再生されます。</p>
+<p>各ID(ファイル名)を変更してLoad *ボタンを押すと指定したファイルを読み込みます。</p>
+<p>ControllerScriptをアタッチして、インスペクターのPlay Allボタンを押すと、すべてのゲームオブジェクトを再生できます。</p>
+<p>※Unityで再生中に変更した設定は基本的に破棄されます。</p>
+<h2>設定ファイル</h2>
+<h3>ゲームデータのパスの指定</h3>
+<p>プロジェクトのAssetsにprim_dir.txtがあれば、そこで指定したパスから読み込みます。
+設定例：<code>D:\game\dolls\gamedata\files\prim</code></p>
+<h3>3Dモデルのファイル指定</h3>
+<p><code>Assets/CharacterSettings</code>
+にある<code>ゲームオブジェクト名.json</code>で読み込むモデルのファイルを設定します。
+同名のゲームオブジェクト(例： Aya)を作成して、コンポーネントを追加してください( Script -&gt; CharScript)</p>
+<p><code>Aya.json</code></p>
+<pre><code>{
+&quot;anim&quot;:&quot;b_wait01-loop_c007&quot;,
+&quot;body&quot;:&quot;b0028c000&quot;,
+&quot;face&quot;:&quot;f002m000&quot;,
+&quot;hair&quot;:&quot;h007m000_prefab&quot;,
+&quot;faceTexture&quot;:&quot;v01_f002m000c007_a&quot;,
+&quot;accy0&quot;:&quot;i7003_A&quot;,
+&quot;accy1&quot;:&quot;i7003_B&quot;
+}
+</code></pre>
+<ul>
+<li>anim: アニメーションファイル名</li>
+<li>body: 3Dモデル(体)のファイル名</li>
+<li>face: 3Dモデル(顔)のファイル名</li>
+<li>faceTexture: テクスチャ(顔)のファイル名</li>
+<li>hair: 3Dモデル(髪)のファイル名</li>
+<li>
+<p>accyS: 3Dモデル(アクセサリー)のファイル名。※キーが重複しなければ複数可。Sは任意の文字列(例: 1)</p>
+</li>
+<li>
+<p>※ファイル名の拡張子(.abap)はあっても動きます。</p>
+</li>
+<li>※メガネ、イヤリング以外のアクセサリーは、位置を決めるため<code>Assets/CharacterSettings/accessory_dic.json</code> にボーンとの対応を記入する必要があります</li>
+</ul>
+<h2>備考</h2>
+<h2>制限事項</h2>
+<ul>
+<li>ビルド不可。Editorでのみ利用可</li>
+<li>物理演算なし
+など</li>
+</ul>
+<h2>アセットファイル名</h2>
+<ul>
+<li>アニメーションファイル名一覧 anim_filenames.csv</li>
+<li>3Dモデル(体)ファイル名一覧 body_filenames.csv</li>
+<li>3Dモデル(髪)ファイル名一覧 hair_filenames.csv</li>
+<li>背景ファイル名一覧 bg_filenames.csv_</li>
+</ul>
+<h3>3Dモデル</h3>
+<h4>髪</h4>
+<p><code>h(キャラクターID)m(数字)_prefab.abap</code></p>
+<h4>顔</h4>
+<p><code>f(数字)m(数字).abap</code></p>
+<h4>体</h4>
+<p><code>b(数字)c(キャラクターID).abap</code></p>
+<p>専用モデル以外のキャラクターIDは <code>000</code>。</p>
+<h3>アニメーション</h3>
+<p><code>b_(*).abap</code></p>
+<h4>撮影モードモーション</h4>
+<p><code>b_photo-common-mot(数字).abap</code></p>
+<h4>撮影モードポーズ</h4>
+<p><code>b_photo-common-pose(数字).abap</code></p>
+<h4>スキル</h4>
+<p><code>b_skill-ur(*)-(*).abap</code></p>
